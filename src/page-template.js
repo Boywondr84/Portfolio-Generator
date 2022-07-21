@@ -1,4 +1,11 @@
-
+module.exports = templateData => {
+console.log(templateData);
+// destructure projects and about data from templateData based on property key names
+const { projects, about, ...header } = templateData;
+console.log(projects);
+console.log(about);
+console.log(header);
+return `
 <!DOCTYPE html>
 <html lang="en">
 
@@ -15,10 +22,10 @@
 <body>
     <header>
         <div class="container flex-row justify-space-between align-center py-3">
-            <h1 class="page-title text-secondary bg-dark py-2 px-3">Ryan</h1>
+            <h1 class="page-title text-secondary bg-dark py-2 px-3">${header.name}</h1>
             <nav class="flex-row">
                 <a class="ml-2 my-1 px-2 py-1 bg-secondary text-dark"
-                    href="https://github.com/undefined">Github</a>
+                    href="https://github.com/${header.github}">Github</a>
             </nav>
         </div>
     </header>
@@ -27,8 +34,12 @@
 
     </main>
     <footer class="container text-center py-3">
-        <h3 class="text-dark">&copy; 2022 by Ryan</h3>
+        <h3 class="text-dark">&copy; ${new Date().getFullYear()} by ${header.name}</h3>
     </footer>
 </body>
 
 </html>
+`;
+};
+
+// module.exports = generatePage();

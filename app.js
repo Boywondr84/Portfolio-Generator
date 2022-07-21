@@ -1,14 +1,11 @@
 const inquirer = require("inquirer");
-// const fs = require("fs");
-// const generatePage = require('./src/page-template-js');
-
-// const pageHTML = generatePage(name, github);
-
-// fs.writeFile("./index.html", pageHTML, err => {
-//     if (err) throw err;
-
-//     console.log("Portfolio complete! Check out index.html to see the output!");
-// });
+const fs = require("fs");
+const generatePage = require('./src/page-template');
+// const mockData = {
+//     name: "Lernantino",
+//     github: "lernantino",
+//     projects: []
+// }
 
 const promptUser = () => {
     return inquirer.prompt([
@@ -59,10 +56,6 @@ const promptUser = () => {
     ]);
 };
 
-// promptUser().then(answers => console.log(answers))
-// .then(promptProject)
-// .then(projectAnswers => console.log(projectAnswers));
-
 const promptProject = portfolioData => {
     console.log(`
     =================
@@ -100,7 +93,7 @@ const promptProject = portfolioData => {
                     console.log('Please describe your project.');
                     return false;
                 }
-            } 
+            }
         },
         {
             type: "checkbox",
@@ -134,16 +127,25 @@ const promptProject = portfolioData => {
             default: false
         }
     ])
-    .then(projectData => {
-        portfolioData.projects.push(projectData);
-        if (projectData.confirmAddProject) {
-            return promptProject(portfolioData);
-        } else {
-            return portfolioData;
-        }
-    });
+        .then(projectData => {
+            portfolioData.projects.push(projectData);
+            if (projectData.confirmAddProject) {
+                return promptProject(portfolioData);
+            } else {
+                return portfolioData;
+            }
+        });
 };
 
+// const pageHTML = generate(mockData);
 promptUser()
     .then(promptProject)
-    .then(projectAnswers => console.log(projectAnswers));
+    .then(portfolioData => {
+        const pageHTML = generatePage(portfolioData);
+
+        fs.writeFile('./index.html', pageHTML, err => {
+            if (err) throw new Error(err);
+
+            console.log("Page created! View index.html in this directory.");
+        });
+    });
